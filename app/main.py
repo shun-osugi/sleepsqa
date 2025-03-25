@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from .annealing import simulated_annealing  # ここでアニーリングロジックをインポート
+from annealing import simulated_annealing  # ここでアニーリングロジックをインポート
 
 app = FastAPI()
 

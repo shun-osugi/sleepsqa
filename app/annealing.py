@@ -4,7 +4,8 @@ import openjij as oj
 import time
 
 def simulated_annealing(cannot_sleep, target_sleep_time, ideal_segments):
-    
+    cannot_sleep = np.array(cannot_sleep)  # list → NumPy配列に変換
+
     # 実行時間の計測開始
     total_start_time = time.time()
 
