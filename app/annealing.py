@@ -19,8 +19,8 @@ def simulated_annealing(cannot_sleep, target_sleep_time, ideal_segments):
     continuous_sleep_weight = 10  # 連続睡眠のペナルティ重みを大きくする
     cannot_sleep_weight = 50  # 寝れない時間のペナルティ重みを大きくする
     segments_weight = 30  # 分割数のペナルティ重みを大きくする
-    day_change_wight = 5  # 曜日間変動のペナルティ重みを大きくする
-    target_sleep_wight = 30  # 目標睡眠時間のペナルティ重みを大きくする
+    day_change_wight = 2  # 曜日間変動のペナルティ重みを大きくする
+    target_sleep_wight = 20  # 目標睡眠時間のペナルティ重みを大きくする
 
     # QUBO変数の設定
     start_time_qubo_vars = time.time()
@@ -116,16 +116,16 @@ def simulated_annealing(cannot_sleep, target_sleep_time, ideal_segments):
                 awake_count += 1
             else:  # 寝ている時間が来たらリセット
                 if awake_count < 4:  # 起きている時間が4時間未満の場合
-                    penalty_awake_gap += (4 - awake_count) * 15  # 4時間未満ならペナルティ
+                    penalty_awake_gap += (4 - awake_count) * 25  # 4時間未満ならペナルティ
                 elif awake_count > 20:  # 起きている時間が20時間を超えている場合
-                    penalty_awake_gap += (awake_count - 20) * 10  # 20時間を超えていたらペナルティ
+                    penalty_awake_gap += (awake_count - 20) * 15  # 20時間を超えていたらペナルティ
                 awake_count = 0  # カウントをリセット
 
         # 最後のスロットが起きている時間で終わる場合、翌日のスロットと合わせて計算
         if awake_count < 4:
-            penalty_awake_gap += (4 - awake_count) * 15  # 起きている時間が4時間未満の場合
+            penalty_awake_gap += (4 - awake_count) * 25  # 起きている時間が4時間未満の場合
         elif awake_count > 20:
-            penalty_awake_gap += (awake_count - 20) * 10  # 20時間を超えている場合
+            penalty_awake_gap += (awake_count - 20) * 15  # 20時間を超えている場合
 
         # 前日の起きている時間と今日の起きている時間を合算（跨ぎを考慮）
         if day > 0:  # 1日目以外
@@ -139,9 +139,9 @@ def simulated_annealing(cannot_sleep, target_sleep_time, ideal_segments):
             # 今日の起きている時間と合算
             total_awake_count = prev_day_awake_count + awake_count
             if total_awake_count < 4:
-                penalty_awake_gap += (4 - total_awake_count) * 15  # 合算した起きている時間が4時間未満
+                penalty_awake_gap += (4 - total_awake_count) * 25  # 合算した起きている時間が4時間未満
             elif total_awake_count > 20:
-                penalty_awake_gap += (total_awake_count - 20) * 10  # 合算した時間が20時間を超えている場合
+                penalty_awake_gap += (total_awake_count - 20) * 15  # 合算した時間が20時間を超えている場合
 
     end_time_awake_gap = time.time()
     print(f"Awake Gap Penalty Calculation Time: {end_time_awake_gap - start_time_awake_gap:.4f} seconds")
